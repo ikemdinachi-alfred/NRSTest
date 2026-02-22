@@ -1,7 +1,8 @@
 /**
  * Google Sheets Service - Data Persistence Layer
  *
- * Integration with Google Sheets for storing test results
+ * Integration with Google Sheets for stor
+ * ing test results
  * Sheet: https://docs.google.com/spreadsheets/d/1j8je-5bynxIyygLFuchpWOy6yhRnnhesafW2KipoKvg/
  *
  * SETUP STEPS:
@@ -18,8 +19,8 @@
  */
 
 // ⚙️ CONFIGURATION - Update this with your Google Apps Script deployment URL
-const GOOGLE_APPS_SCRIPT_URL = ""; // Paste your deployment URL here after deploying Apps Script
-// Example: https://script.google.com/macros/s/AKfycbz.../userweb
+const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQBAeCgOpui_J9b6RlZz1X05E78LPezAboBegGhAfrxVDm7T_YBrHMwyhZKN51j_EC_A/exec"; // Your deployment URL
+// Example: https://script.google.com/macros/s/AKfycbz.../exec
 
 // Sheet ID (no need to change)
 const GOOGLE_SHEET_ID = "1j8je-5bynxIyygLFuchpWOy6yhRnnhesafW2KipoKvg";
