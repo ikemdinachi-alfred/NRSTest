@@ -66,9 +66,6 @@ const AdminLoginPage = () => {
         </form>
 
         <div className="login-footer">
-          <p>
-            <strong>Demo Password:</strong> admin123
-          </p>
           <button type="button" className="back-btn" onClick={resetTest}>
             Back to Home
           </button>

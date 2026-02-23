@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback, useEffect } from "react";
-import { questions } from "../data/questions";
+import { questions, getRandomizedQuestions } from "../data/questions";
 import { submitTestResults } from "../services/googleSheetService";
 
 export const TestContext = createContext();
@@ -7,7 +7,7 @@ export const TestContext = createContext();
 export const TestProvider = ({ children }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [timeRemaining, setTimeRemaining] = useState(45 * 60); // 45 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(100 * 30); // 30 seconds per question (100 questions = 3000 seconds = 50 minutes)
   const [testStarted, setTestStarted] = useState(false);
   const [testSubmitted, setTestSubmitted] = useState(false);
   const [userInfo, setUserInfo] = useState({
@@ -18,6 +18,7 @@ export const TestProvider = ({ children }) => {
   });
   const [allParticipants, setAllParticipants] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [randomizedQuestions, setRandomizedQuestions] = useState(questions);
 
   // Load participants from localStorage on mount
   useEffect(() => {
@@ -31,7 +32,7 @@ export const TestProvider = ({ children }) => {
     }
   }, []);
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = randomizedQuestions[currentQuestionIndex];
 
   const handleAnswer = useCallback(
     (answer) => {
@@ -44,10 +45,10 @@ export const TestProvider = ({ children }) => {
   );
 
   const handleNext = useCallback(() => {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < randomizedQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, randomizedQuestions.length]);
 
   const handlePrevious = useCallback(() => {
     if (currentQuestionIndex > 0) {
@@ -55,12 +56,15 @@ export const TestProvider = ({ children }) => {
     }
   }, [currentQuestionIndex]);
 
-  const navigateToQuestion = useCallback((questionNum) => {
-    const newIndex = questionNum - 1;
-    if (newIndex >= 0 && newIndex < questions.length) {
-      setCurrentQuestionIndex(newIndex);
-    }
-  }, []);
+  const navigateToQuestion = useCallback(
+    (questionNum) => {
+      const newIndex = questionNum - 1;
+      if (newIndex >= 0 && newIndex < randomizedQuestions.length) {
+        setCurrentQuestionIndex(newIndex);
+      }
+    },
+    [randomizedQuestions.length],
+  );
 
   const calculateScore = useCallback(() => {
     let correct = 0;
@@ -150,10 +154,11 @@ export const TestProvider = ({ children }) => {
 
   const startTest = useCallback((info) => {
     setUserInfo(info);
+    setRandomizedQuestions(getRandomizedQuestions());
     setTestStarted(true);
     setAnswers({});
     setCurrentQuestionIndex(0);
-    setTimeRemaining(45 * 60);
+    setTimeRemaining(100 * 30);
   }, []);
 
   const resetTest = useCallback(() => {
@@ -161,7 +166,7 @@ export const TestProvider = ({ children }) => {
     setTestSubmitted(false);
     setAnswers({});
     setCurrentQuestionIndex(0);
-    setTimeRemaining(45 * 60);
+    setTimeRemaining(100 * 30);
     setUserInfo({
       firstName: "",
       lastName: "",
@@ -171,7 +176,7 @@ export const TestProvider = ({ children }) => {
   }, []);
 
   const loginAdmin = useCallback((password) => {
-    if (password === "admin123") {
+    if (password === "NRS2026") {
       setIsAdmin(true);
       return true;
     }
@@ -245,7 +250,7 @@ export const TestProvider = ({ children }) => {
   const value = {
     currentQuestion,
     currentQuestionIndex,
-    questions,
+    questions: randomizedQuestions,
     answers,
     timeRemaining,
     setTimeRemaining,

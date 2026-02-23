@@ -68,7 +68,7 @@ const RegistrationPage = () => {
     <div className="registration-container">
       <div className="registration-card">
         <div className="registration-header">
-          <h1>NRS Onboarding Assessment</h1>
+          <h1>NRS ONBOARDING ASSESSMENT</h1>
           <p className="subtitle">Professional CBT Version</p>
         </div>
 
@@ -76,27 +76,35 @@ const RegistrationPage = () => {
           <h2>Test Information</h2>
           <ul>
             <li>
-              Total Questions: <strong>35</strong>
+              Total Questions: <strong>100</strong>
             </li>
             <li>
-              Time Duration: <strong>45 Minutes</strong>
+              Time Duration: <strong>50 Minutes</strong>
             </li>
             <li>
-              Categories: <strong>6</strong> (Taxation, Accounting, Maths,
-              Current Affairs, English, Financial Accounting)
-            </li>
-            <li>
-              Passing Score: <strong>60%</strong>
+              Passing Score: <strong>70%</strong>
             </li>
           </ul>
+
+          <div className="test-instructions">
+            <p>
+              <strong>Important:</strong> Please read each question carefully
+              and select the <strong>best option </strong>
+              from the available choices.
+            </p>
+            <p className="good-luck-message">
+              <strong>Good Luck!</strong> We wish you success in this
+              assessment.
+            </p>
+          </div>
         </div>
 
         {alreadyTaken && (
           <div className="alert-box alert-warning">
             <p>
-              <strong>This email has already taken the test.</strong> Each
-              candidate can only take the test once. If you believe this is an
-              error, please contact the administrator.
+              <strong>You have already completed this exercise before.</strong>{" "}
+              Each candidate can only take the test once. If you believe this is
+              an error, please contact the administrator.
             </p>
           </div>
         )}

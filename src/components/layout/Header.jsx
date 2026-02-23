@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-left">
-        <h1>NRS Onboarding Assessment</h1>
+        <h1>NRS ONBOARDING ASSESSMENT </h1>
         <span className="question-counter">
           Question {currentQuestionIndex + 1} of {questions.length}
         </span>
