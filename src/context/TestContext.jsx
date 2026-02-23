@@ -1,6 +1,9 @@
 import React, { createContext, useState, useCallback, useEffect } from "react";
 import { questions, getRandomizedQuestions } from "../data/questions";
-import { submitTestResults } from "../services/googleSheetService";
+import {
+  submitTestResults,
+  fetchAllResults,
+} from "../services/googleSheetService";
 
 export const TestContext = createContext();
 
@@ -175,9 +178,53 @@ export const TestProvider = ({ children }) => {
     });
   }, []);
 
-  const loginAdmin = useCallback((password) => {
+  const loginAdmin = useCallback(async (password) => {
     if (password === "NRS2026") {
       setIsAdmin(true);
+
+      // Fetch all results from Google Sheets when admin logs in
+      try {
+        console.log("Fetching results from Google Sheets...");
+        const sheetResults = await fetchAllResults();
+
+        if (sheetResults && sheetResults.length > 0) {
+          // Convert sheet results to participant format
+          const participantsFromSheet = sheetResults.map((result) => ({
+            id: result.id,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            phone: result.phone,
+            score: {
+              correct: result.score,
+              total: result.totalQuestions,
+              percentage: result.percentage,
+            },
+            answers: {},
+            submittedAt: result.timestamp,
+            googleSheetLink:
+              "https://docs.google.com/spreadsheets/d/1j8je-5bynxIyygLFuchpWOy6yhRnnhesafW2KipoKvg/",
+          }));
+
+          // Update localStorage with the latest from Google Sheets
+          setAllParticipants(participantsFromSheet);
+          localStorage.setItem(
+            "testParticipants",
+            JSON.stringify(participantsFromSheet),
+          );
+          console.log(
+            "✓ Admin dashboard loaded with",
+            participantsFromSheet.length,
+            "results from Google Sheets",
+          );
+        }
+      } catch (error) {
+        console.warn(
+          "Could not sync with Google Sheets, using local data:",
+          error,
+        );
+      }
+
       return true;
     }
     return false;

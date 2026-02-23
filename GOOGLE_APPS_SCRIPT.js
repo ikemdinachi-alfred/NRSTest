@@ -126,6 +126,38 @@ function doGet(e) {
     }
   }
 
+  if (action === "getAllResults") {
+    try {
+      const sheet =
+        SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+      const data = sheet.getDataRange().getValues();
+
+      // Skip header row and map all results
+      const results = [];
+      for (let i = 1; i < data.length; i++) {
+        results.push({
+          id: Date.now() + i, // Generate unique ID
+          timestamp: data[i][0],
+          firstName: data[i][1],
+          lastName: data[i][2],
+          email: data[i][3],
+          phone: data[i][4],
+          score: data[i][5],
+          totalQuestions: data[i][6],
+          percentage: data[i][7],
+          status: data[i][8],
+          categoryBreakdown: data[i][9],
+        });
+      }
+
+      return createResponse(true, "All results retrieved", {
+        results: results,
+      });
+    } catch (error) {
+      return createResponse(false, "Error retrieving all results: " + error);
+    }
+  }
+
   return createResponse(false, "Unknown action");
 }
 

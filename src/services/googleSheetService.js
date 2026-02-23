@@ -19,7 +19,8 @@
  */
 
 // ⚙️ CONFIGURATION - Update this with your Google Apps Script deployment URL
-const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQBAeCgOpui_J9b6RlZz1X05E78LPezAboBegGhAfrxVDm7T_YBrHMwyhZKN51j_EC_A/exec"; // Your deployment URL
+const GOOGLE_APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbyQBAeCgOpui_J9b6RlZz1X05E78LPezAboBegGhAfrxVDm7T_YBrHMwyhZKN51j_EC_A/exec"; // Your deployment URL
 // Example: https://script.google.com/macros/s/AKfycbz.../exec
 
 // Sheet ID (no need to change)
@@ -142,5 +143,38 @@ export const fetchResults = async (email) => {
   } catch (error) {
     console.error("Error fetching results:", error);
     throw error;
+  }
+};
+
+/**
+ * Fetch ALL results from Google Sheets (for admin dashboard)
+ * This ensures the admin can see results from all devices/states
+ */
+export const fetchAllResults = async () => {
+  try {
+    if (GOOGLE_APPS_SCRIPT_URL) {
+      const response = await fetch(
+        `${GOOGLE_APPS_SCRIPT_URL}?action=getAllResults`,
+      );
+      const data = await response.json();
+
+      if (data.success && data.results) {
+        console.log(
+          "✓ Retrieved all results from Google Sheets:",
+          data.results.length,
+          "records",
+        );
+        return data.results;
+      } else {
+        console.warn("Failed to fetch results:", data.message);
+        return [];
+      }
+    } else {
+      console.warn("Google Apps Script URL not configured");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching all results from Google Sheets:", error);
+    return [];
   }
 };

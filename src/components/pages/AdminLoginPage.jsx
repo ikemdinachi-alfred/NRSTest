@@ -7,7 +7,7 @@ const AdminLoginPage = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -16,7 +16,7 @@ const AdminLoginPage = () => {
       return;
     }
 
-    if (loginAdmin(password)) {
+    if (await loginAdmin(password)) {
       setPassword("");
     } else {
       setError("Invalid password");
